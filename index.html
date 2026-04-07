@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Summit Brooke Construction — Forms</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" /></noscript>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #F2F0ED;
+      --surface:   #FFFFFF;
+      --border:    #E0DDD8;
+      --ink:       #0D0D0D;
+      --ink-muted: #7A7874;
+      --crimson:   #8B1A10;
+      --crimson-dk:#6B1209;
+      --crimson-lt:#F5ECEA;
+      --shadow:    0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.05);
+      --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 14px 36px rgba(0,0,0,.10);
+      --radius:    12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Brand header ── */
+    .brand-header {
+      background: var(--crimson);
+    }
+
+    .brand-header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .login-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 6px;
+      padding: 8px 16px;
+      color: #FFFFFF;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .82rem;
+      font-weight: 500;
+      letter-spacing: .03em;
+      cursor: pointer;
+      transition: background .2s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .login-btn:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.7); }
+
+    .user-info { display: flex; align-items: center; gap: 10px; }
+
+    .user-name {
+      font-size: .8rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.8);
+      letter-spacing: .02em;
+    }
+
+    .staff-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFFFFF;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      color: var(--crimson);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .8rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity .2s ease;
+      white-space: nowrap;
+    }
+
+    .staff-link:hover { opacity: .85; }
+
+    .logout-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      padding: 6px 12px;
+      color: rgba(255,255,255,0.7);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .75rem;
+      cursor: pointer;
+      transition: color .2s, border-color .2s;
+    }
+
+    .logout-btn:hover { color: #fff; border-color: rgba(255,255,255,0.7); }
+
+    /* ── Login modal ── */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      background: #fff;
+      border-radius: 14px;
+      padding: 36px 32px 28px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px; right: 16px;
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      color: var(--ink-muted);
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+    }
+
+    .modal-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .modal-subtitle {
+      font-size: .83rem;
+      font-weight: 300;
+      color: var(--ink-muted);
+    }
+
+    .modal-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .modal-field label {
+      font-size: .78rem;
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    .modal-field input {
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .95rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .modal-field input:focus { border-color: var(--crimson); }
+
+    .modal-error {
+      font-size: .8rem;
+      color: var(--crimson);
+      display: none;
+      margin-top: -10px;
+    }
+
+    .modal-submit {
+      background: var(--crimson);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .modal-submit:hover { opacity: .88; }
+
+    .wordmark {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .wordmark-img {
+      height: 72px;
+      width: auto;
+      display: block;
+    }
+
+    .brand-tagline {
+      font-size: .72rem;
+      font-weight: 300;
+      letter-spacing: .08em;
+      color: rgba(255,255,255,.55);
+      text-transform: uppercase;
+    }
+
+    /* ── Page intro ── */
+    header {
+      padding: 44px 40px 36px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-header-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .project-label {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 400;
+      color: var(--crimson);
+      letter-spacing: .01em;
+      white-space: nowrap;
+    }
+
+    .project-label span {
+      color: var(--crimson);
+    }
+
+    .page-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 1.15;
+      font-weight: 400;
+      letter-spacing: -.01em;
+      color: var(--ink);
+    }
+
+    .page-subtitle {
+      margin-top: 10px;
+      font-size: .95rem;
+      font-weight: 300;
+      color: var(--ink-muted);
+      letter-spacing: .01em;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px;
+      width: 100%;
+    }
+
+    .divider hr {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Grid ── */
+    main {
+      flex: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 40px 40px 80px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp .4s ease forwards;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--crimson);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .25s ease;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-3px);
+      border-color: #D0CEC9;
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card:nth-child(1)  { animation-delay: .05s; }
+    .card:nth-child(2)  { animation-delay: .10s; }
+    .card:nth-child(3)  { animation-delay: .15s; }
+    .card:nth-child(4)  { animation-delay: .20s; }
+    .card:nth-child(5)  { animation-delay: .25s; }
+    .card:nth-child(6)  { animation-delay: .30s; }
+    .card:nth-child(7)  { animation-delay: .35s; }
+    .card:nth-child(8)  { animation-delay: .40s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--crimson-lt);
+      color: var(--crimson);
+      font-size: .72rem;
+      font-weight: 500;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      padding: 4px 9px;
+      border-radius: 4px;
+      width: fit-content;
+      margin-bottom: 4px;
+    }
+
+    .card-badge svg { width: 11px; height: 11px; }
+
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      line-height: 1.25;
+      color: var(--ink);
+    }
+
+    .card-desc {
+      font-size: .875rem;
+      font-weight: 300;
+      line-height: 1.55;
+      color: var(--ink-muted);
+      flex: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      margin-top: 8px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-action {
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--crimson);
+      letter-spacing: .02em;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: gap .2s ease;
+    }
+
+    .card:hover .card-action { gap: 9px; }
+    .card-action svg { width: 14px; height: 14px; }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--crimson);
+      text-align: center;
+      padding: 20px 24px;
+      font-size: .78rem;
+      font-weight: 300;
+      color: rgba(255,255,255,.6);
+      letter-spacing: .04em;
+    }
+
+    @media (max-width: 600px) {
+      .brand-header { padding: 0; }
+      .brand-header-inner { padding: 12px 20px; justify-content: space-between; }
+      .wordmark-img { height: 48px; }
+      .login-btn { padding: 6px 10px; font-size: .75rem; }
+      .user-name { display: none; }
+      .staff-link { padding: 6px 10px; font-size: .75rem; }
+      .logout-btn { padding: 5px 8px; font-size: .7rem; }
+      header, .divider, main { padding-left: 20px; padding-right: 20px; }
+      header { padding-top: 32px; padding-bottom: 24px; text-align: center; }
+      .page-header-row { flex-direction: column; gap: 8px; align-items: center; }
+      .project-label { font-size: 1.1rem; font-weight: 700; }
+      .page-subtitle { text-align: center; }
+      .divider { text-align: center; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Brand header -->
+<div class="brand-header">
+  <div class="brand-header-inner">
+    <a class="wordmark" href="#">
+      <img src="logo-banner.png" alt="Summit Brooke Construction" class="wordmark-img" />
+    </a>
+    <div id="auth-area">
+      <button class="login-btn" onclick="openModal()">Staff Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- Login modal -->
+<div class="modal-backdrop" id="modal" onclick="handleBackdropClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+    <div>
+      <div class="modal-title">Staff Login</div>
+      <div class="modal-subtitle">Enter your staff access code to continue.</div>
+    </div>
+    <div class="modal-field">
+      <label>Access Code</label>
+      <input type="password" id="password-input" placeholder="Enter access code"
+             onkeydown="if(event.key==='Enter') submitLogin()" />
+    </div>
+    <div class="modal-error" id="modal-error">Incorrect access code. Please try again.</div>
+    <button class="modal-submit" onclick="submitLogin()">Access Staff Portal</button>
+  </div>
+</div>
+
+<script>
+const HASH = 'd0f338b28739db14729e8bc844bbb96beaf98d9356429b0188a4175583bd5f72';
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function openModal() {
+  document.getElementById('modal').classList.add('open');
+  setTimeout(() => document.getElementById('password-input').focus(), 50);
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('password-input').value = '';
+  document.getElementById('modal-error').style.display = 'none';
+}
+
+function handleBackdropClick(e) {
+  if (e.target === document.getElementById('modal')) closeModal();
+}
+
+async function submitLogin() {
+  const val = document.getElementById('password-input').value;
+  const hash = await sha256(val);
+  if (hash === HASH) {
+    sessionStorage.setItem('staff_auth', '1');
+    window.location.href = 'staff.html';
+  } else {
+    document.getElementById('modal-error').style.display = 'block';
+    document.getElementById('password-input').value = '';
+    document.getElementById('password-input').focus();
+  }
+}
+
+if (sessionStorage.getItem('staff_auth') === '1') {
+  document.getElementById('auth-area').innerHTML = `
+    <div class="user-info">
+      <a class="staff-link" href="staff.html">Staff Portal</a>
+      <button class="logout-btn" onclick="signOut()">Sign out</button>
+    </div>`;
+}
+
+function signOut() {
+  sessionStorage.removeItem('staff_auth');
+  location.reload();
+}
+</script>
+
+<!-- Page intro -->
+<header>
+  <div class="page-header-row">
+    <h1 class="page-title">Forms &amp; Reports</h1>
+    <span class="project-label"><span>&#9650;</span> Brookmere Gardens</span>
+  </div>
+  <p class="page-subtitle">Select a form below to open and complete it.</p>
+</header>
+
+<div class="divider"><hr /></div>
+
+<main>
+  <div class="grid">
+
+    <a class="card" href="https://forms.summitbrooke.com/flha?project=Brookmere%20Gardens&email=brookmere@summitbrooke.com" target="_blank">
+      <span class="card-badge">
+        <svg viewBox="0 0 12 12" fill="currentColor"><path d="M6 1a5 5 0 1 0 0 10A5 5 0 0 0 6 1Zm.5 7.5h-1v-4h1v4Zm0-5h-1v-1h1v1Z"/></svg>
+        Safety
+      </span>
+      <span class="card-title">Field Level Hazard Assessment</span>
+      <span class="card-desc">Document site hazards, controls, and worker acknowledgements before beginning field work.</span>
+      <div class="card-footer">
+        <span class="card-action">Open form
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+        </span>
+      </div>
+    </a>
+<!--
+    <a class="card" href="/incident" target="_blank">
+      <span class="card-badge">
+        <svg viewBox="0 0 12 12" fill="currentColor"><path d="M6 1a5 5 0 1 0 0 10A5 5 0 0 0 6 1Zm.5 7.5h-1v-4h1v4Zm0-5h-1v-1h1v1Z"/></svg>
+        Safety
+      </span>
+      <span class="card-title">Incident Report</span>
+      <span class="card-desc">Record details of a workplace incident, near miss, or injury for internal tracking and compliance.</span>
+      <div class="card-footer">
+        <span class="card-action">Open form
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a class="card" href="/inspection" target="_blank">
+      <span class="card-badge">
+        <svg viewBox="0 0 12 12" fill="currentColor"><path d="M9.5 1.5h-7A1 1 0 0 0 1.5 2.5v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1Zm-4.75 7L3 6.75l.7-.7 1.05 1.04 2.55-2.54.7.7-3.25 3.25Z"/></svg>
+        Operations
+      </span>
+      <span class="card-title">Site Inspection Checklist</span>
+      <span class="card-desc">Complete a structured site walkthrough and flag items requiring follow-up or corrective action.</span>
+      <div class="card-footer">
+        <span class="card-action">Open form
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a class="card" href="/timelog" target="_blank">
+      <span class="card-badge">
+        <svg viewBox="0 0 12 12" fill="currentColor"><path d="M6 1a5 5 0 1 0 0 10A5 5 0 0 0 6 1Zm.5 6.2-.85.5-2.5-4.3.85-.5 2.5 4.3Z"/></svg>
+        Operations
+      </span>
+      <span class="card-title">Daily Time Log</span>
+      <span class="card-desc">Submit daily hours, project codes, and crew details for payroll and project cost tracking.</span>
+      <div class="card-footer">
+        <span class="card-action">Open form
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a class="card" href="/equipment" target="_blank">
+      <span class="card-badge">
+        <svg viewBox="0 0 12 12" fill="currentColor"><path d="M9.5 1.5h-7A1 1 0 0 0 1.5 2.5v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1Zm-4.75 7L3 6.75l.7-.7 1.05 1.04 2.55-2.54.7.7-3.25 3.25Z"/></svg>
+        Equipment
+      </span>
+      <span class="card-title">Equipment Pre-Use Inspection</span>
+      <span class="card-desc">Confirm equipment condition before use. Log deficiencies and sign off before starting operations.</span>
+      <div class="card-footer">
+        <span class="card-action">Open form
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a class="card" href="/visitor" target="_blank">
+      <span class="card-badge">
+        <svg viewBox="0 0 12 12" fill="currentColor"><path d="M6 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 1c-2.67 0-4 1.34-4 2v.5h8V9c0-.66-1.33-2-4-2Z"/></svg>
+        Admin
+      </span>
+      <span class="card-title">Visitor Sign-In</span>
+      <span class="card-desc">Register site visitors, record safety briefing acknowledgement, and track entry and exit times.</span>
+      <div class="card-footer">
+        <span class="card-action">Open form
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+        </span>
+      </div>
+    </a>
+-->
+  </div>
+</main>
+
+<footer>
+  &copy; 2026 Summit Brooke Construction
+</footer>
+
+</body>
+</html>

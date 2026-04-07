@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Summit Brooke Construction — Staff Portal</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" /></noscript>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #F2F0ED;
+      --surface:   #FFFFFF;
+      --border:    #E0DDD8;
+      --ink:       #0D0D0D;
+      --ink-muted: #7A7874;
+      --crimson:   #8B1A10;
+      --crimson-lt:#F5ECEA;
+      --shadow:    0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.05);
+      --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 14px 36px rgba(0,0,0,.10);
+      --radius:    12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Auth gate — shown while checking login */
+    #auth-gate {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      gap: 16px;
+      color: var(--ink-muted);
+      font-size: .9rem;
+    }
+
+    #auth-gate .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--crimson);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #page-content { display: none; flex: 1; flex-direction: column; }
+
+    /* ── Brand header ── */
+    .brand-header { background: var(--crimson); }
+
+    .brand-header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .wordmark {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .wordmark-img {
+      height: 72px;
+      width: auto;
+      display: block;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-name {
+      font-size: .8rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.8);
+      letter-spacing: .02em;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 6px;
+      padding: 7px 14px;
+      color: #fff;
+      font-size: .8rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+
+    .back-btn:hover { background: rgba(255,255,255,0.25); }
+
+    .logout-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      padding: 6px 12px;
+      color: rgba(255,255,255,0.7);
+      font-size: .75rem;
+      cursor: pointer;
+      transition: color .2s, border-color .2s;
+    }
+
+    .logout-btn:hover { color: #fff; border-color: rgba(255,255,255,0.7); }
+
+    /* ── Header ── */
+    header {
+      padding: 44px 40px 36px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .staff-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--crimson);
+      color: white;
+      font-size: .68rem;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 14px;
+    }
+
+    .page-header-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .page-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 1.15;
+      font-weight: 400;
+      letter-spacing: -.01em;
+      color: var(--ink);
+    }
+
+    .project-label {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 400;
+      color: var(--crimson);
+      white-space: nowrap;
+    }
+
+    .page-subtitle {
+      margin-top: 10px;
+      font-size: .95rem;
+      font-weight: 300;
+      color: var(--ink-muted);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px;
+      width: 100%;
+    }
+
+    .divider hr { border: none; border-top: 1px solid var(--border); }
+
+    /* ── Section labels ── */
+    .section-heading {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--ink-muted);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-size: .72rem;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Grid ── */
+    main {
+      flex: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 40px 40px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp .4s ease forwards;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--crimson);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .25s ease;
+    }
+
+    .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: #D0CEC9; }
+    .card:hover::before { transform: scaleX(1); }
+
+    .card:nth-child(1) { animation-delay: .05s; }
+    .card:nth-child(2) { animation-delay: .10s; }
+    .card:nth-child(3) { animation-delay: .15s; }
+    .card:nth-child(4) { animation-delay: .20s; }
+    .card:nth-child(5) { animation-delay: .25s; }
+    .card:nth-child(6) { animation-delay: .30s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--crimson-lt);
+      color: var(--crimson);
+      font-size: .72rem;
+      font-weight: 500;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      padding: 4px 9px;
+      border-radius: 4px;
+      width: fit-content;
+      margin-bottom: 4px;
+    }
+
+    .card-badge svg { width: 11px; height: 11px; }
+
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      line-height: 1.25;
+      color: var(--ink);
+    }
+
+    .card-desc {
+      font-size: .875rem;
+      font-weight: 300;
+      line-height: 1.55;
+      color: var(--ink-muted);
+      flex: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      margin-top: 8px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-action {
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--crimson);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: gap .2s ease;
+    }
+
+    .card:hover .card-action { gap: 9px; }
+    .card-action svg { width: 14px; height: 14px; }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--crimson);
+      text-align: center;
+      padding: 20px 24px;
+      font-size: .78rem;
+      font-weight: 300;
+      color: rgba(255,255,255,.6);
+      letter-spacing: .04em;
+    }
+
+    @media (max-width: 600px) {
+      .brand-header { padding: 0; }
+      .brand-header-inner { padding: 12px 20px; justify-content: space-between; }
+      .wordmark-img { height: 48px; margin-left: 0; }
+      .user-name { display: none; }
+      .back-btn { padding: 6px 10px; font-size: .75rem; }
+      .logout-btn { padding: 5px 8px; font-size: .7rem; }
+      header, .divider, main { padding-left: 20px; padding-right: 20px; }
+      header { padding-top: 32px; padding-bottom: 24px; text-align: center; }
+      .page-header-row { flex-direction: column; gap: 8px; align-items: center; }
+      .project-label { font-size: 1.1rem; font-weight: 700; }
+      .page-subtitle { text-align: center; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Auth gate shown while checking -->
+<div id="auth-gate">
+  <div class="spinner"></div>
+  <span>Verifying credentials…</span>
+</div>
+
+<!-- Page content — hidden until auth confirmed -->
+<div id="page-content">
+
+  <div class="brand-header">
+    <div class="brand-header-inner">
+      <a class="wordmark" href="index.html">
+        <img src="logo-banner.png" alt="Summit Brooke Construction" class="wordmark-img" />
+      </a>
+      <div class="user-info">
+        <a class="back-btn" href="index.html">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M12 7H2M7 12l-5-5 5-5"/></svg>
+          All Forms
+        </a>
+        <button class="logout-btn" onclick="signOut()">Sign out</button>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="staff-badge">
+      <svg viewBox="0 0 12 12" fill="currentColor" width="10" height="10"><path d="M6 1a5 5 0 1 0 0 10A5 5 0 0 0 6 1Zm.5 7.5h-1v-4h1v4Zm0-5h-1v-1h1v1Z"/></svg>
+      Staff Portal
+    </div>
+    <div class="page-header-row">
+      <h1 class="page-title">Forms &amp; Reports</h1>
+      <span class="project-label">&#9650; Brookmere Gardens</span>
+    </div>
+    <p class="page-subtitle">Staff-only forms and all standard site forms.</p>
+  </header>
+
+  <div class="divider"><hr /></div>
+
+  <main>
+
+    <!-- Staff-only section -->
+    <div>
+      <div class="grid">
+
+        <a class="card" href="https://forms.summitbrooke.com/dcr?project=Brookmere%20Gardens&projectno=25002&location=107A%20Ave%20Surrey&email=brookmere@summitbrooke.com" target="_blank">
+          <span class="card-badge">
+            <svg viewBox="0 0 12 12" fill="currentColor"><path d="M9.5 1.5h-7A1 1 0 0 0 1.5 2.5v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1Zm-4.75 7L3 6.75l.7-.7 1.05 1.04 2.55-2.54.7.7-3.25 3.25Z"/></svg>
+            Operations
+          </span>
+          <span class="card-title">Daily Site Report</span>
+          <span class="card-desc">Report daily progress, number of people on site, equipment on site, and general site conditions.</span>
+          <div class="card-footer">
+            <span class="card-action">Open form
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+            </span>
+          </div>
+        </a>
+        
+        <a class="card" href="https://forms.summitbrooke.com/dsi?project=Brookmere%20Gardens&email=brookmere@summitbrooke.com" target="_blank">
+          <span class="card-badge">
+            <svg viewBox="0 0 12 12" fill="currentColor"><path d="M6 1a5 5 0 1 0 0 10A5 5 0 0 0 6 1Zm.5 7.5h-1v-4h1v4Zm0-5h-1v-1h1v1Z"/></svg>
+            Safety
+          </span>
+          <span class="card-title">Daily Site Inspection</span>
+          <span class="card-desc">Report daily site safety inspection, corrective actions, and action assignments.</span>
+          <div class="card-footer">
+            <span class="card-action">Open form
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+            </span>
+          </div>
+        </a>
+<!--
+        <a class="card" href="https://forms.summitbrooke.com/orientation?project=Brookmere%20Gardens&projectno=25002&email=brookmere@summitbrooke.com" target="_blank">
+          <span class="card-badge">
+            <svg viewBox="0 0 12 12" fill="currentColor"><path d="M6 1a5 5 0 1 0 0 10A5 5 0 0 0 6 1Zm.5 7.5h-1v-4h1v4Zm0-5h-1v-1h1v1Z"/></svg>
+            Safety
+          </span>
+          <span class="card-title">Site Orientation</span>
+          <span class="card-desc">Perform initial orientation for visitors, short term workers, or regular workers.</span>
+          <div class="card-footer">
+            <span class="card-action">Open form
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+            </span>
+          </div>
+        </a>
+-->
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    &copy; 2026 Summit Brooke Construction &mdash; Staff Portal
+  </footer>
+
+</div><!-- end page-content -->
+
+<script>
+// Check auth — redirect to home if not logged in
+if (sessionStorage.getItem('staff_auth') !== '1') {
+  window.location.replace('index.html');
+}
+
+// Show page and set display name placeholder
+document.getElementById('auth-gate').style.display = 'none';
+document.getElementById('page-content').style.display = 'flex';
+document.getElementById('page-content').style.flexDirection = 'column';
+document.getElementById('user-display-name').textContent = 'Staff';
+
+function signOut() {
+  sessionStorage.removeItem('staff_auth');
+  window.location.href = 'index.html';
+}
+</script>
+
+</body>
+</html>
